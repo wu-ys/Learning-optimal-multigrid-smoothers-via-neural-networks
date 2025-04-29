@@ -1,14 +1,7 @@
 import torch
 from torch import nn
 import numpy as np
-import torch.nn.functional as F
 import time
-import math
-import scipy.sparse as sp
-import scipy
-from torch.autograd import Variable
-
-
 
 device = 'cpu'
 
@@ -19,7 +12,7 @@ class _ConvNet_(nn.Module):
         self.convLayers1 = nn.ModuleList([nn.Conv2d(1, 1, kernel_size, padding=kernel_size//2, bias=False).double()
                                           for _ in range(5)])
         self.convLayers2 = nn.ModuleList([nn.Conv2d(1, 1, kernel_size, padding=kernel_size//2, bias=False).double()
-                                         for _ in range(2)])                         
+                                          for _ in range(2)])
         initial_weights = torch.zeros(1,1,kernel_size,kernel_size).double()
         initial_weights[0,0,kernel_size//2,kernel_size//2] = initial_kernel
 
@@ -36,7 +29,7 @@ class _ConvNet_(nn.Module):
 
         for net in self.convLayers2:
             y2 = torch.tanh(net(y2))
-        
+
         return y1+2/3*y2
 
 def compute_loss(net,problem_instances):
@@ -72,7 +65,7 @@ class alphaCNN:
             self.nb_layers = nb_layers
             self.net = _ConvNet_(initial,kernel_size,initial_kernel).to(device)
         else:
-            self.net = net
+            self.net = nets
 
         self.learning_rate = learning_rate
         if optimizer == 'Adadelta':

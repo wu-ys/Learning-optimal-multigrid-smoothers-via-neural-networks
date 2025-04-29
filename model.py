@@ -16,7 +16,7 @@ class ConvNet(nn.Module):
         self.convLayers1 = nn.ModuleList([nn.Conv2d(1, 1, 3, padding=1, bias=False).double()
                                           for _ in range(5)])
         self.convLayers2 = nn.ModuleList([nn.Conv2d(1, 1, 3, padding=1, bias=False).double()
-                                         for _ in range(1)])                         
+                                         for _ in range(1)])
 
 
     def forward(self, x):
@@ -26,10 +26,9 @@ class ConvNet(nn.Module):
         y2 = x
         for net in self.convLayers2:
             y2 = torch.relu(net(y2))
-        
         return y1+2/3*y2
-    
-    
+
+
 class _ConvNet_(nn.Module):
     def __init__(self, nb_layers):
         super(_ConvNet_, self).__init__()
