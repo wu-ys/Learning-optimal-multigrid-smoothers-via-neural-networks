@@ -4,7 +4,7 @@ import numpy as np
 import scipy as sp
 import pyamg
 import time
-from Deep_sovler import *
+from Deep_solver import *
 import matplotlib.pyplot as plt
 ## This file produces the results in the paper
 

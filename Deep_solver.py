@@ -11,13 +11,13 @@ import pyamg
 import time
 from helper import *
 
-#This file contains the functions used to produce the results in the paper
+# This file contains the functions used to produce the results in the paper
 
 def geometric_solver(A, prolongation_function,
                      presmoother=('gauss_seidel', {'sweep': 'forward'}),
                      postsmoother=('gauss_seidel', {'sweep': 'forward'}),
                      max_levels=5, max_coarse=10,coarse_solver='splu',**kwargs):
-   
+
     levels = [multilevel_solver.level()]
 
     # convert A to csr
@@ -65,8 +65,8 @@ def extend_hierarchy(levels, prolongation_fn):
     A = R * A * P
     A = A.astype(np.float64)  # convert from complex numbers, should have A.imag==0
     levels[-1].A = A
-    
-    
+
+
 def multigrid_solver(A,size,args):
     if args['smoother'] == 'a-CNN':
         solver = geometric_solver(A, prolongation_fn,max_levels=5,coarse_solver='splu')
@@ -246,7 +246,7 @@ def compute_damping_factor(A,n):
     D0 = sp.sparse.diags(1/sp.sparse.csr_matrix.diagonal(A)).tocsr()
     L = sp.sparse.tril(A.toarray())
     L = np.linalg.inv(L.toarray())
-    idx = vector[0].argsort()[::-1]   
+    idx = vector[0].argsort()[::-1]
     eigenValues = vector[0][idx]
     eigenVectors = vector[1][:,idx]
     v = eigenVectors
@@ -270,7 +270,7 @@ def compute_damping_factor(A,n):
             a_CNN.append(np.linalg.norm(damping_vector2))
             gs.append(np.linalg.norm(damping_vector3))
     return t,w_jacobi,CNN,a_CNN,gs
-    
+
 def solve_systems(A,solver):
     m=A.shape[0]
     num_test = 10
