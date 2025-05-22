@@ -3,7 +3,12 @@ import torch
 import torch.nn as nn
 import scipy.sparse as sp
 import scipy
-device='cpu'
+device='cuda'
+
+
+
+# class MyProblem:
+#     def __init__(self,)
 
 class Problem:
 
@@ -20,13 +25,13 @@ class Problem:
         N = levels[0]['N']
         l = levels[0]['l']
         if f is None:
-            f = torch.zeros((l,1))
+            f = torch.zeros((l,1), device=device)
         # Initialize parameters to compute ground truth solution
         if initial_ground_truth is None:
             self.ground_truth = torch.rand(l,1).double().to(device)
         else:
             self.ground_truth = initial_ground_truth
-        
+
 
         if initial_u is None:
             self.initial_u = torch.rand(l,1).double().to(device)
@@ -42,7 +47,7 @@ class Problem:
         if net_trained!=0:
             for net in self.net_trained:
                 for param in net.parameters():
-                    param.requires_grad = False    
+                    param.requires_grad = False
         A = self.levels[0]['A']
         self.f = torch.sparse.mm(A,self.ground_truth)
     def compute_solution(self, nets):
@@ -77,13 +82,13 @@ def V_cycle_red_black(levels,f,initial_u,lvl,mxl,step,nets):
     else:
         idx_x,idx_y,idx_a,idx_b = level['rotate_idx']
         r = f-torch.sparse.mm(A,u)
-        rr = torch.zeros(N*N,1).double()
-        rr[0:N*N:2,:] = r.clone()    
+        rr = torch.zeros(N*N,1, device=device).double()
+        rr[0:N*N:2,:] = r.clone()
         rr = rr.view(N,N)
-        uu = torch.zeros(N,N).double()
+        uu = torch.zeros(N,N, device=device).double()
         uu[idx_x,idx_y] = rr[idx_a,idx_b]
         uu = step(uu.view(1,1,N,N),nets[lvl]).view(N,N)
-        BB = torch.zeros(N,N).double()
+        BB = torch.zeros(N,N, device=device).double()
         BB[idx_a,idx_b] = uu[idx_x,idx_y]
         BB = BB.view(-1,1)
         u = u+BB[0:N*N:2,:]
@@ -99,13 +104,13 @@ def V_cycle_red_black(levels,f,initial_u,lvl,mxl,step,nets):
     else:
         idx_x,idx_y,idx_a,idx_b = level['rotate_idx']
         r = f-torch.sparse.mm(A,u)
-        rr = torch.zeros(N*N,1).double()
-        rr[0:N*N:2,:] = r.clone()    
+        rr = torch.zeros(N*N,1, device=device).double()
+        rr[0:N*N:2,:] = r.clone()
         rr = rr.view(N,N)
-        uu = torch.zeros(N,N).double()
+        uu = torch.zeros(N,N, device=device).double()
         uu[idx_x,idx_y] = rr[idx_a,idx_b]
         uu = step(uu.view(1,1,N,N),nets[lvl]).view(N,N)
-        BB = torch.zeros(N,N).double()
+        BB = torch.zeros(N,N, device=device).double()
         BB[idx_a,idx_b] = uu[idx_x,idx_y]
         BB = BB.view(-1,1)
         u = u+BB[0:N*N:2,:]

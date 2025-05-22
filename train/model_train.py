@@ -3,7 +3,7 @@ from torch import nn
 import numpy as np
 import time
 
-device = 'cpu'
+device = 'cuda'
 
 class _ConvNet_(nn.Module):
     def __init__(self,k,kernel_size,initial_kernel):

@@ -5,7 +5,7 @@ from problems import *
 from model_train import *
 import scipy as sp
 import pyamg
-device = 'cpu'
+device = 'cuda'
 
 # %%
 def diffusion_stencil_2d(epsilon=1.0, theta=0.0, type='FE'):
